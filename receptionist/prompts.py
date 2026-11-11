@@ -248,6 +248,12 @@ def build_system_prompt(config: BusinessConfig) -> str:
         else:
             hours_lines.append(f"  {display_name}: {day_hours.open} - {day_hours.close}")
     hours_block = "\n".join(hours_lines)
+    # An entirely unset weekly schedule means hours are unknown, not closed.
+    hours_unknown = all(getattr(config.hours, day) is None for day in [
+        "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"
+    ])
+    if hours_unknown:
+        hours_block = "  Not yet confirmed. Do not claim any day is closed or open."
 
     routing_lines = [f"  - {e.name}: {e.description}" for e in config.routing]
     routing_block = "\n".join(routing_lines) if routing_lines else "  No routing configured."
@@ -301,7 +307,7 @@ IMPORTANT RULES:
 BUSINESS HOURS (timezone: {config.business.timezone}):
 {hours_block}
 
-When the business is closed, say: {config.after_hours_message}
+When business hours are confirmed and the business is closed, say: {config.after_hours_message}
 
 DEPARTMENTS YOU CAN TRANSFER TO:
 {routing_block}
