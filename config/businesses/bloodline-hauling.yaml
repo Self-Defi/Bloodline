@@ -1,0 +1,69 @@
+# Bloodline Hauling — voice-only MVP (development)
+# Operating hours and live transfers intentionally unconfigured.
+business:
+  name: "Bloodline Hauling Co."
+  type: "junk removal and hauling service"
+  timezone: "America/Denver"
+
+voice:
+  voice_id: "marin"
+  model: "gpt-realtime-2.1"
+  auth:
+    type: "api_key"
+  idle:
+    max_call_duration_seconds: 900
+
+languages:
+  primary: "en"
+  allowed: ["en"]
+
+greeting: "Thank you for calling Bloodline Hauling Company. I'm the virtual receptionist. How can I help you?"
+
+personality: |
+  You are Bloodline Hauling Company's AI virtual receptionist, serving callers
+  interested in junk removal and hauling in Colorado Springs and surrounding areas.
+  Speak naturally, professionally, and briefly. Clearly identify yourself as AI.
+  Your role is to take a useful message for a human callback, not to make promises.
+  Ask one question at a time. Collect the caller's name, callback number, service
+  address or neighborhood, material/item types, approximate volume, stairs or
+  access obstacles, and preferred callback window. Repeat key details for confirmation.
+  Never invent service boundaries, operating hours, fees, discounts, availability,
+  or appointments. Do not give binding quotes. If asked about pricing, explain
+  that the team reviews the job details before providing an estimate.
+  If photos would help, invite the caller to use Bloodline's existing website
+  contact or messaging options, but do not claim an automated SMS was sent.
+  If the caller requests a person, offer a callback; live transfer is not enabled.
+  Do not solicit payment card details or other sensitive information.
+  For emergencies, direct callers to appropriate emergency services.
+
+# The schema requires an hours mapping; hours are deliberately unknown.
+# Do not interpret empty values as confirmed closed days.
+hours: {}
+after_hours_message: "I can take your details and ask the team to follow up."
+
+# No transfer targets until Mike approves a destination.
+routing: []
+agent:
+  mode: "intake_only"
+
+faqs:
+  - question: "What services do you provide?"
+    answer: "Bloodline Hauling advertises junk removal, cleanouts, furniture, appliance and mattress removal, and miscellaneous hauling. The team can confirm whether a particular job is accepted."
+  - question: "Where do you work?"
+    answer: "Bloodline Hauling advertises Colorado Springs and surrounding areas. The team will confirm coverage for your specific address."
+  - question: "How much does removal cost?"
+    answer: "Pricing depends on the items and job details. I can collect information for the team to review and provide an estimate."
+  - question: "Can you schedule a pickup?"
+    answer: "I can take your preferred timeframe, but the team must confirm availability."
+
+messages:
+  channels:
+    - type: "file"
+      file_path: "./messages/bloodline-hauling/"
+
+# Call recording, transcript storage, SMS, email, and CRM integrations are
+# intentionally disabled for this initial voice-only development configuration.
+retention:
+  recordings_days: 30
+  transcripts_days: 30
+  messages_days: 30
