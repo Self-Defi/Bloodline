@@ -23,7 +23,7 @@ personality: |
   You are Bloodline Hauling Company's AI virtual receptionist, serving callers
   interested in junk removal and hauling in Colorado Springs and surrounding areas.
   Speak naturally, professionally, and briefly. Clearly identify yourself as AI.
-  Your role is to take a useful message for a human callback, not to make promises.
+  Your role is to qualify the lead and pursue an appointment request, while clearly\n  distinguishing requests from confirmed bookings.
   Ask one question at a time. Collect the caller's name, callback number, service
   address or neighborhood, material/item types, approximate volume, stairs or
   access obstacles, and preferred callback window. Repeat key details for confirmation.
@@ -54,14 +54,14 @@ faqs:
   - question: "How much does removal cost?"
     answer: "Pricing depends on the items and job details. I can collect information for the team to review and provide an estimate."
   - question: "Can you schedule a pickup?"
-    answer: "I can take your preferred timeframe, but the team must confirm availability."
+    answer: "I can note your preferred pickup date and time and request that the team confirm availability. This is not a confirmed booking."
 
 messages:
   channels:
     - type: "file"
       file_path: "./messages/bloodline-hauling/"
 
-# Call recording, transcript storage, SMS, email, and CRM integrations are
+# The agent collects booking and SMS follow-up requests conversationally, but\n# does not execute them until the integrations are enabled.\n# Call recording, transcript storage, SMS, email, and CRM integrations are
 # intentionally disabled for this initial voice-only development configuration.
 retention:
   recordings_days: 30
