@@ -1,5 +1,5 @@
 # Bloodline Hauling — voice-only MVP (development)
-# Operating hours and live transfers intentionally unconfigured.
+# Operating hours confirmed Monday–Friday, 9 AM–6 PM Mountain Time.
 business:
   name: "Bloodline Hauling Co."
   type: "junk removal and hauling service"
@@ -40,9 +40,14 @@ personality: |
   Do not solicit payment card details or other sensitive information.
   For emergencies, direct callers to appropriate emergency services.
 
-# The schema requires an hours mapping; hours are deliberately unknown.
-# Do not interpret empty values as confirmed closed days.
-hours: {}
+hours:
+  monday:    { open: "09:00", close: "18:00" }
+  tuesday:   { open: "09:00", close: "18:00" }
+  wednesday: { open: "09:00", close: "18:00" }
+  thursday:  { open: "09:00", close: "18:00" }
+  friday:    { open: "09:00", close: "18:00" }
+  saturday:  closed
+  sunday:    closed
 after_hours_message: "I can take your details and ask the team to follow up."
 
 # No transfer targets until Mike approves a destination.
