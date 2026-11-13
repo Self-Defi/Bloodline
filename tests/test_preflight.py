@@ -47,3 +47,20 @@ def test_detects_placeholder_and_url(tmp_path):
     errors = check_environment(env, {})
     assert any("LIVEKIT_URL: expected" in e for e in errors)
     assert any("placeholder" in e for e in errors)
+
+
+def test_detects_env_local_precedence(tmp_path):
+    env = tmp_path / ".env"
+    env.write_text(
+        "LIVEKIT_URL=wss://example.livekit.cloud\n"
+        "LIVEKIT_API_KEY=key-id\n"
+        "LIVEKIT_API_SECRET=secret-value\n"
+        "OPENAI_API_KEY=sk-proj-current\n",
+        encoding="utf-8",
+    )
+    (tmp_path / ".env.local").write_text(
+        "OPENAI_API_KEY=sk-proj-stale\n", encoding="utf-8"
+    )
+    errors = check_environment(env, {})
+    assert any(".env.local takes precedence" in e for e in errors)
+    assert "sk-proj-stale" not in str(errors)
