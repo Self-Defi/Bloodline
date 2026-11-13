@@ -29,3 +29,4 @@ secrets/*
 
 # Local-only VM provisioning scripts (reference the tenant slug; not for the public repo)
 deploy/
+bloodline-debug.log
