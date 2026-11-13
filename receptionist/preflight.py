@@ -22,6 +22,8 @@ def check_environment(path: Path = Path(".env"), environ=None) -> list[str]:
     if not path.is_file():
         return [".env file missing"]
     values = dotenv_values(path)
+    local_path = path.with_name(".env.local")
+    local_values = dotenv_values(local_path) if local_path.is_file() else {}
     environ = os.environ if environ is None else environ
     for name in REQUIRED:
         value = values.get(name)
@@ -33,17 +35,23 @@ def check_environment(path: Path = Path(".env"), environ=None) -> list[str]:
             errors.append(f"{name}: placeholder value")
         if environ.get(name) and value and environ[name] != value:
             errors.append(f"{name}: process environment overrides .env with a different value")
+        elif local_values.get(name) and value and local_values[name] != value:
+            errors.append(f"{name}: .env.local takes precedence over .env with a different value")
     url = values.get("LIVEKIT_URL") or ""
     if url and not (url.startswith("wss://") or url.startswith("ws://")):
         errors.append("LIVEKIT_URL: expected ws:// or wss://")
     return errors
 
 
-def verify_openai(path: Path = Path(".env")) -> str:
+def verify_openai(path: Path = Path(".env"), environ=None) -> str:
     """Check provider authentication, without displaying a key or response body."""
     from openai import OpenAI, AuthenticationError, PermissionDeniedError, RateLimitError, APIConnectionError, APIStatusError
 
-    key = dotenv_values(path).get("OPENAI_API_KEY")
+    environ = os.environ if environ is None else environ
+    local_path = path.with_name(".env.local")
+    local_values = dotenv_values(local_path) if local_path.is_file() else {}
+    key = (environ.get("OPENAI_API_KEY") or local_values.get("OPENAI_API_KEY")
+           or dotenv_values(path).get("OPENAI_API_KEY"))
     if not key:
         return "FAIL: OPENAI_API_KEY missing"
     try:
@@ -71,7 +79,7 @@ def main() -> int:
             print("FAIL:", failure)
         print("No credentials were displayed.")
         return 1
-    print("PASS: .env values present; no conflicting process overrides detected.")
+    print("PASS: .env values present; no conflicting environment or .env.local overrides detected.")
     if args.verify_openai:
         outcome = verify_openai()
         print(outcome)
